@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'jdk21'
+        maven 'maven'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Test and Package') {
+            steps {
+                dir('starter') {
+                    sh 'mvn clean test package'
+                }
+            }
+        }
+
+        stage('Archive WAR') {
+            steps {
+                archiveArtifacts artifacts: 'starter/target/*.war', fingerprint: true
+                junit 'starter/target/surefire-reports/*.xml'
+            }
+        }
+    }
+}

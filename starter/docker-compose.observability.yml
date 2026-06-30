@@ -1,0 +1,31 @@
+services:
+  splunk:
+    image: splunk/splunk:latest
+    container_name: security-devops-splunk
+    environment:
+      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
+      SPLUNK_PASSWORD: Password123!
+    ports:
+      - "8000:8000"
+      - "8088:8088"
+      - "8089:8089"
+    volumes:
+      - splunk-var:/opt/splunk/var
+      - splunk-etc:/opt/splunk/etc
+
+  jenkins:
+    image: jenkins/jenkins:lts-jdk21
+    container_name: security-devops-jenkins
+    user: root
+    ports:
+      - "8081:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins-home:/var/jenkins_home
+      - .:/workspace/security-and-devops/starter
+
+volumes:
+  splunk-var:
+  splunk-etc:
+  jenkins-home:
